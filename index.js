@@ -46,6 +46,15 @@ async function runScript() {
     let totalBrokenUrl = process.env.broken_url //42295
     let totalFineUrl = process.env.fine_url //1369
     let ownURL = process.env.api_url
+
+    await axios.post(ownURL + "/api/send?message=Render Server is Running...")
+        .then((res) => {
+            console.log(res.data)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
     setInterval(async () => {
         
 
@@ -87,8 +96,8 @@ async function runScript() {
             console.log("No changes ...")
         }
         
-    // }, 600000);
-    }, 30000);
+    }, 600000);
+    // }, 30000);
     
 }
 
