@@ -104,5 +104,5 @@ async function runScript() {
 server.listen(PORT, () => {
     setTimeout(() => {
         runScript();
-    }, 1000)
+    }, 10000)
 });
