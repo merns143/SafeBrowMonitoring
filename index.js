@@ -43,8 +43,8 @@ async function runScript() {
     const sbrowdomains = "http://sbrow.glowlytics.com/api/domains"
     const sbrowurls = "https://sbrow.glowlytics.com/api/available-urls"
 
-    let totalBrokenUrl = 42295 //42295
-    let totalFineUrl = 1369 //1369
+    let totalBrokenUrl = process.env.broken_url //42295
+    let totalFineUrl = process.env.fine_url //1369
     setInterval(async () => {
         
 
