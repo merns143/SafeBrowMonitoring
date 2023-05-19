@@ -45,6 +45,7 @@ async function runScript() {
 
     let totalBrokenUrl = process.env.broken_url //42295
     let totalFineUrl = process.env.fine_url //1369
+    let ownURL = process.env.api_url
     setInterval(async () => {
         
 
@@ -75,7 +76,7 @@ async function runScript() {
             totalFineUrl = totalFine
             totalBrokenUrl = totalBroke
             console.log("Messaging...")
-            await axios.post("http://localhost:3001/api/send?message=" + theMsg)
+            await axios.post(ownURL + "/api/send?message=" + theMsg)
                 .then((res) => {
                     console.log(res.data)
                 })
@@ -86,7 +87,8 @@ async function runScript() {
             console.log("No changes ...")
         }
         
-    }, 600000);
+    // }, 600000);
+    }, 30000);
     
 }
 
