@@ -15,7 +15,9 @@ server.use(cors({
     methods: ["GET", "POST"]
 }));
 
-var webhookUrl = "https://snowballcompany.webhook.office.com/webhookb2/710b9309-8b4d-4ba8-9574-921f48cdfc44@caf560d4-f4f6-4071-8442-abab6b7b7122/IncomingWebhook/dc5953fc3bad4c9389836b8530335ef4/6d105f93-f0c4-4e82-adea-d784761d81bf";
+// var webhookUrl = "https://snowballcompany.webhook.office.com/webhookb2/710b9309-8b4d-4ba8-9574-921f48cdfc44@caf560d4-f4f6-4071-8442-abab6b7b7122/IncomingWebhook/dc5953fc3bad4c9389836b8530335ef4/6d105f93-f0c4-4e82-adea-d784761d81bf";
+
+var webhookUrl = "https://snowballcompany.webhook.office.com/webhookb2/710b9309-8b4d-4ba8-9574-921f48cdfc44@caf560d4-f4f6-4071-8442-abab6b7b7122/IncomingWebhook/9109e36715cc4614ba67fdb848aa970a/6d105f93-f0c4-4e82-adea-d784761d81bf";
 
 server.post("/api/send", async (req, res) => {
     var cardJson = {
@@ -29,7 +31,7 @@ server.post("/api/send", async (req, res) => {
 
     await axios.post(webhookUrl, cardJson)
         .then(() => {
-            res.send("Success");
+            res.send("Message sent.");
         })
         .catch(error => {
             console.error(error);
@@ -37,6 +39,59 @@ server.post("/api/send", async (req, res) => {
         });
 });
 
+async function runScript() {
+    const sbrowdomains = "http://sbrow.glowlytics.com/api/domains"
+    const sbrowurls = "https://sbrow.glowlytics.com/api/available-urls"
+
+    let totalBrokenUrl = 42295 //42295
+    let totalFineUrl = 1369 //1369
+    setInterval(async () => {
+        
+
+        let broUrlHTTP = 0
+        let broUrlHTTPS = 0
+        let fiUrlHTTP = 0
+        let fiUrlHTTPS = 0
+        await axios.get(sbrowurls).then(res => {
+            broUrlHTTP = res.data.data.filter(x => x.broken == 1 && x.type == "http:")[0].counts
+            broUrlHTTPS = res.data.data.filter(x => x.broken == 1 && x.type == "https")[0].counts
+            fiUrlHTTP = res.data.data.filter(x => x.broken == 0 && x.type == "http:")[0].counts
+            fiUrlHTTPS = res.data.data.filter(x => x.broken == 0 && x.type == "https")[0].counts
+        }).catch(err => {
+            console.log(err)
+        })
+
+        const totalBroke = broUrlHTTP + broUrlHTTPS
+        const totalFine = fiUrlHTTP + fiUrlHTTPS
+
+        let theMsg = null
+        if (totalBroke > totalBrokenUrl && totalFine < totalFineUrl) {
+            if ((totalFineUrl - totalFine) == (totalBroke - totalBrokenUrl)) {
+                theMsg = "Nag taas ang count sa Broken/Flagged urls = " + (totalFineUrl - totalFine)
+            } 
+        }
+
+        if (theMsg) {
+            totalFineUrl = totalFine
+            totalBrokenUrl = totalBroke
+            console.log("Messaging...")
+            await axios.post("http://localhost:3001/api/send?message=" + theMsg)
+                .then((res) => {
+                    console.log(res.data)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        } else {
+            console.log("No changes ...")
+        }
+        
+    }, 600000);
+    
+}
+
 server.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${ PORT }`);
+    setTimeout(() => {
+        runScript();
+    }, 1000)
 });
