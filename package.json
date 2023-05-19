@@ -1,0 +1,30 @@
+{
+  "name": "sequential-workflow-adaptive-card",
+  "version": "1.0.0",
+  "description": "Sequential Workflows in adaptive card",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "lint": "eslint .",
+    "server": "npm install && node index.js"
+  },
+  "keywords": [],
+  "author": "Microsoft",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "nodemon": "^2.0.13"
+  }
+}
